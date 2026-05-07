@@ -79,7 +79,7 @@ function GeneratePage() {
       navigate({ to: "/result/$id", params: { id: result.id } });
     } catch (err) {
       console.error(err);
-      toast.error("Не удалось сгенерировать карточку");
+      toast.error(err instanceof Error ? err.message : "Не удалось сгенерировать карточку");
     } finally {
       setLoading(false);
     }
