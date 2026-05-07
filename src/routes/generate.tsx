@@ -16,6 +16,7 @@ import {
 import { generateProductCard } from "@/lib/ai/openai-service";
 import { saveCard } from "@/lib/ai/storage";
 import type { CardInput, CardStyle, Marketplace } from "@/lib/ai/types";
+import { AILoader } from "@/components/ai-loader";
 
 export const Route = createFileRoute("/generate")({
   head: () => ({
@@ -87,6 +88,7 @@ function GeneratePage() {
 
   return (
     <div className="mx-auto max-w-3xl px-6 py-16">
+      <AILoader open={loading} />
       <div className="mb-10">
         <h1 className="text-3xl font-semibold tracking-tight">Создать карточку товара</h1>
         <p className="mt-2 text-muted-foreground">
