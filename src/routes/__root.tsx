@@ -9,6 +9,8 @@ import {
 } from "@tanstack/react-router";
 
 import appCss from "../styles.css?url";
+import { Toaster } from "@/components/ui/sonner";
+import { Sparkles } from "lucide-react";
 
 function NotFoundComponent() {
   return (
@@ -72,11 +74,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "AI Marketplace Card Studio" },
+      {
+        name: "description",
+        content:
+          "Создавайте карточки товаров для Wildberries, Ozon, Яндекс Маркета и Lamoda, которые отличаются от конкурентов.",
+      },
+      { property: "og:title", content: "AI Marketplace Card Studio" },
+      {
+        property: "og:description",
+        content: "AI-инструмент для создания уникальных карточек товаров на маркетплейсах.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
@@ -113,7 +121,66 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Outlet />
+      <div className="min-h-screen bg-background flex flex-col">
+        <SiteHeader />
+        <main className="flex-1">
+          <Outlet />
+        </main>
+        <SiteFooter />
+      </div>
+      <Toaster />
     </QueryClientProvider>
+  );
+}
+
+function SiteHeader() {
+  return (
+    <header className="sticky top-0 z-40 w-full border-b border-border/60 bg-background/80 backdrop-blur-xl">
+      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
+        <Link to="/" className="flex items-center gap-2 font-semibold tracking-tight">
+          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-foreground text-background">
+            <Sparkles className="h-4 w-4" />
+          </span>
+          <span>Card Studio</span>
+        </Link>
+        <nav className="flex items-center gap-1 text-sm">
+          <Link
+            to="/"
+            activeOptions={{ exact: true }}
+            activeProps={{ className: "bg-secondary text-foreground" }}
+            inactiveProps={{ className: "text-muted-foreground hover:text-foreground" }}
+            className="rounded-md px-3 py-2 transition-colors"
+          >
+            Главная
+          </Link>
+          <Link
+            to="/generate"
+            activeProps={{ className: "bg-secondary text-foreground" }}
+            inactiveProps={{ className: "text-muted-foreground hover:text-foreground" }}
+            className="rounded-md px-3 py-2 transition-colors"
+          >
+            Создать
+          </Link>
+          <Link
+            to="/history"
+            activeProps={{ className: "bg-secondary text-foreground" }}
+            inactiveProps={{ className: "text-muted-foreground hover:text-foreground" }}
+            className="rounded-md px-3 py-2 transition-colors"
+          >
+            История
+          </Link>
+        </nav>
+      </div>
+    </header>
+  );
+}
+
+function SiteFooter() {
+  return (
+    <footer className="border-t border-border/60 py-8">
+      <div className="mx-auto max-w-6xl px-6 text-sm text-muted-foreground">
+        © {new Date().getFullYear()} AI Marketplace Card Studio
+      </div>
+    </footer>
   );
 }
