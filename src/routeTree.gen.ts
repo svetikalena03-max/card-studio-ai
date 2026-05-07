@@ -9,10 +9,16 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as HistoryRouteImport } from './routes/history'
 import { Route as GenerateRouteImport } from './routes/generate'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ResultIdRouteImport } from './routes/result.$id'
 
+const HistoryRoute = HistoryRouteImport.update({
+  id: '/history',
+  path: '/history',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const GenerateRoute = GenerateRouteImport.update({
   id: '/generate',
   path: '/generate',
@@ -32,35 +38,46 @@ const ResultIdRoute = ResultIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/generate': typeof GenerateRoute
+  '/history': typeof HistoryRoute
   '/result/$id': typeof ResultIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/generate': typeof GenerateRoute
+  '/history': typeof HistoryRoute
   '/result/$id': typeof ResultIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/generate': typeof GenerateRoute
+  '/history': typeof HistoryRoute
   '/result/$id': typeof ResultIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/generate' | '/result/$id'
+  fullPaths: '/' | '/generate' | '/history' | '/result/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/generate' | '/result/$id'
-  id: '__root__' | '/' | '/generate' | '/result/$id'
+  to: '/' | '/generate' | '/history' | '/result/$id'
+  id: '__root__' | '/' | '/generate' | '/history' | '/result/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   GenerateRoute: typeof GenerateRoute
+  HistoryRoute: typeof HistoryRoute
   ResultIdRoute: typeof ResultIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/history': {
+      id: '/history'
+      path: '/history'
+      fullPath: '/history'
+      preLoaderRoute: typeof HistoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/generate': {
       id: '/generate'
       path: '/generate'
@@ -88,6 +105,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   GenerateRoute: GenerateRoute,
+  HistoryRoute: HistoryRoute,
   ResultIdRoute: ResultIdRoute,
 }
 export const routeTree = rootRouteImport
