@@ -13,6 +13,7 @@ import { Route as HistoryRouteImport } from './routes/history'
 import { Route as GenerateRouteImport } from './routes/generate'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ResultIdRouteImport } from './routes/result.$id'
+import { Route as ApiGenerateCardRouteImport } from './routes/api/generate-card'
 
 const HistoryRoute = HistoryRouteImport.update({
   id: '/history',
@@ -34,17 +35,24 @@ const ResultIdRoute = ResultIdRouteImport.update({
   path: '/result/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiGenerateCardRoute = ApiGenerateCardRouteImport.update({
+  id: '/api/generate-card',
+  path: '/api/generate-card',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/generate': typeof GenerateRoute
   '/history': typeof HistoryRoute
+  '/api/generate-card': typeof ApiGenerateCardRoute
   '/result/$id': typeof ResultIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/generate': typeof GenerateRoute
   '/history': typeof HistoryRoute
+  '/api/generate-card': typeof ApiGenerateCardRoute
   '/result/$id': typeof ResultIdRoute
 }
 export interface FileRoutesById {
@@ -52,20 +60,33 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/generate': typeof GenerateRoute
   '/history': typeof HistoryRoute
+  '/api/generate-card': typeof ApiGenerateCardRoute
   '/result/$id': typeof ResultIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/generate' | '/history' | '/result/$id'
+  fullPaths:
+    | '/'
+    | '/generate'
+    | '/history'
+    | '/api/generate-card'
+    | '/result/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/generate' | '/history' | '/result/$id'
-  id: '__root__' | '/' | '/generate' | '/history' | '/result/$id'
+  to: '/' | '/generate' | '/history' | '/api/generate-card' | '/result/$id'
+  id:
+    | '__root__'
+    | '/'
+    | '/generate'
+    | '/history'
+    | '/api/generate-card'
+    | '/result/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   GenerateRoute: typeof GenerateRoute
   HistoryRoute: typeof HistoryRoute
+  ApiGenerateCardRoute: typeof ApiGenerateCardRoute
   ResultIdRoute: typeof ResultIdRoute
 }
 
@@ -99,6 +120,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ResultIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/generate-card': {
+      id: '/api/generate-card'
+      path: '/api/generate-card'
+      fullPath: '/api/generate-card'
+      preLoaderRoute: typeof ApiGenerateCardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -106,8 +134,19 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   GenerateRoute: GenerateRoute,
   HistoryRoute: HistoryRoute,
+  ApiGenerateCardRoute: ApiGenerateCardRoute,
   ResultIdRoute: ResultIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
